@@ -3,7 +3,6 @@ class HotelApi {
   static const hostConnectUser = "$hostConnect/user";
 
   static const signup = "$hostConnect/hotel/signup.jsp";
-  static const validateEmail = "$hostConnect/user/validate_email.php";
 
   static const login = "$hostConnect/hotel/login.jsp";
 }

@@ -1,20 +1,20 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_hotel/api/admin_api.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:flutter_application_hotel/api/hotel_api.dart';
-
-class HotelSignUp extends StatefulWidget {
-  const HotelSignUp({super.key});
+class adminSignUp extends StatefulWidget {
+  const adminSignUp({super.key});
 
   @override
-  State<HotelSignUp> createState() => _SignState();
+  State<adminSignUp> createState() => _SignState();
 }
 
-class _SignState extends State<HotelSignUp> {
+class _SignState extends State<adminSignUp> {
   final formKey = GlobalKey<FormState>();
 
+  String adminGrade = '';
   String password = '';
   String passwordConfirm = '';
 
@@ -23,11 +23,13 @@ class _SignState extends State<HotelSignUp> {
   late bool validationResult;
   bool isButtonActive = false;
 
-  var userNameController = TextEditingController();
-  var emailController = TextEditingController();
+  var adminEmailController = TextEditingController();
+  var adminNameController = TextEditingController();
+  var idController = TextEditingController();
   var telController = TextEditingController();
   var passwordController = TextEditingController();
-
+  var gradeController = TextEditingController();
+  var password2Controller = TextEditingController();
   String? validatePassword(String value) {
     String pattern =
         r'^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,15}$';
@@ -57,23 +59,29 @@ class _SignState extends State<HotelSignUp> {
   saveInfo() async {
     try {
       var res = await http.post(
-        Uri.parse(HotelApi.signup),
+        Uri.parse(AdminApi.signup),
         body: {
-          "user_email": emailController.text.trim(),
-          "user_pw": passwordController.text.trim(),
-          "user_tel": telController.text.trim(),
-          "user_name": userNameController.text.trim(),
+          "admin_email": adminEmailController.text.trim(),
+          "admin_id": gradeController.text.trim(),
+          "admin_pw": passwordController.text.trim(),
+          "admin_access_level": gradeController.text.trim(),
+          "admin_tel": telController.text.trim(),
+          "admin_name": adminNameController.text.trim(),
         },
       );
+      print(res.body);
       if (res.statusCode == 200) {
         var resSignup = jsonDecode(res.body);
         signUpComplete();
 
         if (resSignup['success'] == true) {
           setState(() {
-            userNameController.clear();
-            emailController.clear();
+            adminEmailController.clear();
+            adminNameController.clear();
+            idController.clear();
+            gradeController.clear();
             passwordController.clear();
+            password2Controller.clear();
             telController.clear();
           });
         }
@@ -101,7 +109,7 @@ class _SignState extends State<HotelSignUp> {
       appBar: AppBar(
         leadingWidth: 120,
         title: const Text(
-          '호텔 회원 가입',
+          '관리자 회원가입',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -132,7 +140,7 @@ class _SignState extends State<HotelSignUp> {
                       decoration: const InputDecoration(
                           counterText: '',
                           prefixIcon: Icon(Icons.email),
-                          hintText: 'email@example.com'),
+                          hintText: '관리자 이메일을 입력하세요.'),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "이메일을 입력하세요.";
@@ -142,7 +150,26 @@ class _SignState extends State<HotelSignUp> {
                         }
                         return null;
                       },
-                      controller: emailController,
+                      controller: adminEmailController,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 370.0,
+                    child: TextFormField(
+                      cursorColor: Colors.blue,
+                      keyboardType: TextInputType.emailAddress,
+                      maxLength: 40,
+                      decoration: const InputDecoration(
+                          counterText: '',
+                          prefixIcon: Icon(Icons.perm_identity_sharp),
+                          hintText: '관리자 아이디를 입력하세요.'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "아이디를 입력하세요.";
+                        }
+                        return null;
+                      },
+                      controller: idController,
                     ),
                   ),
                   SizedBox(
@@ -180,6 +207,7 @@ class _SignState extends State<HotelSignUp> {
                       cursorColor: Colors.blue,
                       keyboardType: TextInputType.visiblePassword,
                       maxLength: 40,
+                      controller: password2Controller,
                       decoration: InputDecoration(
                           counterText: '',
                           prefixIcon: const Icon(Icons.lock),
@@ -198,6 +226,25 @@ class _SignState extends State<HotelSignUp> {
                       },
                       validator: (value) =>
                           validatePasswordConfirm(password, passwordConfirm),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 370.0,
+                    child: TextFormField(
+                      cursorColor: Colors.blue,
+                      keyboardType: TextInputType.phone,
+                      maxLength: 40,
+                      decoration: const InputDecoration(
+                          counterText: '',
+                          prefixIcon: Icon(Icons.grade),
+                          hintText: '직급을 입력하세요.'),
+                      validator: (value) {
+                        if (value?.isEmpty ?? true) {
+                          return '직급을 입력하세요. ("-" 제외)';
+                        }
+                        return null;
+                      },
+                      controller: gradeController,
                     ),
                   ),
                   SizedBox(
@@ -233,7 +280,7 @@ class _SignState extends State<HotelSignUp> {
                         }
                         return null;
                       },
-                      controller: userNameController,
+                      controller: adminNameController,
                       decoration: const InputDecoration(
                           counterText: '',
                           prefixIcon: Icon(Icons.person),

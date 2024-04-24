@@ -1,13 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_hotel/layout/Search.dart';
+import 'package:flutter_application_hotel/layout/confirm_hotel.dart';
+import 'package:flutter_application_hotel/model/hotel_user.dart';
 import 'package:flutter_application_hotel/login/hotel_signup.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_application_hotel/api/hotel_api.dart';
-import 'package:flutter_application_hotel/model/hotel_user.dart';
-import 'package:flutter_application_hotel/user/user_pref.dart';
-import 'package:get/get.dart';
+import 'package:flutter_application_hotel/layout/travel_index.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -42,29 +41,40 @@ class LoginState extends State<Login> {
   userLogin() async {
     try {
       var res = await http.post(Uri.parse(HotelApi.login), body: {
-        'user_email': emailController.text.trim(),
-        'user_pw': passwordController.text.trim(),
+        'travel_email': emailController.text.trim(),
+        'travel_pw': passwordController.text.trim(),
       });
-      if (res.statusCode == 200) {
-        var resLogin = jsonDecode(res.body);
-        if (resLogin['success'] == true) {
-          print('성공');
 
-          HotelUser userInfo = HotelUser.fromJson(resLogin['userData']);
-          print(userInfo.toJson());
-          await RememberUser.saveRememberUserInfo(userInfo);
+      if (res.statusCode == 200) {
+        print('200');
+        var resLogin = jsonDecode(res.body);
+
+        if (resLogin['success'] == true) {
+          HotelUser travelInfo = HotelUser.fromJson(resLogin['hotelData']);
 
           setState(() {
             emailController.clear();
             passwordController.clear();
           });
+
+          complete();
         } else {
-          print('실패');
+          failed();
         }
       }
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  complete() {
+    return Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => const travel_index()));
+  }
+
+  failed() {
+    return ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('로그인 실패')));
   }
 
   @override
@@ -179,7 +189,7 @@ class LoginState extends State<Login> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const HotelSignUp()));
+                                          const confirm_hotel()));
                             },
                             child: const MouseRegion(
                               cursor: SystemMouseCursors.click,
@@ -264,13 +274,7 @@ class LoginState extends State<Login> {
                       height: 50,
                       child: TextButton(
                         onPressed: () {
-                          if (formKey.currentState!.validate()) {
-                            userLogin();
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(const SnackBar(
-                              content: Text('로그인 성공'),
-                            ));
-                          }
+                          userLogin();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blueAccent,

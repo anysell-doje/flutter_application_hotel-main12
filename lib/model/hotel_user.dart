@@ -14,7 +14,6 @@ class HotelUser {
 
   Map<String, dynamic> toJson() => {
         'user_email': user_email,
-        'user_pw': user_pw,
         'user_tel': user_tel,
         'user_name': user_name,
       };

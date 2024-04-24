@@ -57,36 +57,16 @@ class _SignState extends State<travelSignUp> {
     }
   }
 
-  checkUserEmail() async {
-    try {
-      var response = await http.post(Uri.parse(TravelApi.validateEmail), body: {
-        'user_email': emailController.text.trim(),
-      });
-      if (response.statusCode == 200) {
-        var responseBody = jsonDecode(response.body);
-        if (responseBody['existEmail'] == true) {
-          // 이메일 주소를 사용하고 있다면?
-          print('이 이메일은 이미 사용중 입니다. 다른 이메일을 사용해주세요.');
-        } else {
-          saveInfo();
-        }
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
   saveInfo() async {
-    TravelUser travelUserModel = TravelUser(
-      emailController.text.trim(),
-      passwordController.text.trim(),
-      telController.text.trim(),
-      userNameController.text.trim(),
-    );
     try {
       var res = await http.post(
         Uri.parse(TravelApi.signup),
-        body: travelUserModel.toJson(),
+        body: {
+          "travel_email": emailController.text.trim(),
+          "travel_pw": passwordController.text.trim(),
+          "travel_tel": telController.text.trim(),
+          "travel_name": userNameController.text.trim(),
+        },
       );
       if (res.statusCode == 200) {
         var resSignup = jsonDecode(res.body);

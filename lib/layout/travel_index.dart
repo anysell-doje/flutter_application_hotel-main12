@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_hotel/index/index.dart';
 import 'package:flutter_application_hotel/layout/Search.dart';
 import 'package:side_navigation/side_navigation.dart';
 import 'Search.dart';
 
 class travel_index extends StatefulWidget {
-  const travel_index({super.key});
+  const travel_index({
+    super.key,
+  });
 
   @override
   createState() => _MainViewState();
@@ -41,6 +44,19 @@ class _MainViewState extends State<travel_index> {
             fontFamily: 'CantoraOne',
           ),
         ),
+        actions: [
+          Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: IconButton(
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const bothLogin()),
+                        (route) => false);
+                  },
+                  icon: const Icon(Icons.logout)))
+        ],
         shape:
             Border(bottom: BorderSide(width: 3, color: Colors.grey.shade200)),
       ),
@@ -88,8 +104,8 @@ class _MainViewState extends State<travel_index> {
                 });
               },
               toggler: SideBarToggler(
-                  expandIcon: Icons.keyboard_arrow_left,
-                  shrinkIcon: Icons.keyboard_arrow_right,
+                  expandIcon: Icons.menu,
+                  shrinkIcon: Icons.menu,
                   onToggle: () {}),
             ),
           ),

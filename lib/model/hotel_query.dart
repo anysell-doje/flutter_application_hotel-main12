@@ -1,3 +1,5 @@
+import 'package:flutter_application_hotel/layout/Search.dart';
+
 class HotelName {
   String hotelName;
   HotelName(this.hotelName);
@@ -6,7 +8,5 @@ class HotelName {
         json['hotel_names'],
       );
 
-  Map<String, dynamic> toJson() => {
-        'hotel_name': hotelName,
-      };
+  Map<String, dynamic> toJson() => {'hotel_name': hotelName};
 }

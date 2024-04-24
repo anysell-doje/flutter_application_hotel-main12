@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_hotel/api/travel_api.dart';
-import 'package:flutter_application_hotel/layout/travel_index.dart';
-import 'package:flutter_application_hotel/model/travel_user.dart';
-import 'travel_signup.dart';
+import 'package:flutter_application_hotel/layout/confirm_hotel.dart';
+import 'package:flutter_application_hotel/model/hotel_user.dart';
+import 'package:flutter_application_hotel/login/hotel_signup.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_application_hotel/layout/confirm_travel.dart';
+import 'package:flutter_application_hotel/api/hotel_api.dart';
+import 'package:flutter_application_hotel/layout/travel_index.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -16,14 +16,12 @@ class Login extends StatefulWidget {
 }
 
 class LoginState extends State<Login> {
-  var emailController = TextEditingController();
-  var passwordController = TextEditingController();
-
   String id = "";
   String pw = "";
-  bool? yes;
-  final formKey = GlobalKey<FormState>();
 
+  var emailController = TextEditingController();
+  var passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
   String? validatePassword(String value) {
     String pattern =
         r'^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,15}$';
@@ -40,28 +38,19 @@ class LoginState extends State<Login> {
     }
   }
 
-  String? validatePasswordConfirm(String password, String passwordConfirm) {
-    if (passwordConfirm.isEmpty) {
-      return '비밀번호 확인칸을 입력하세요';
-    } else if (password != passwordConfirm) {
-      return '입력한 비밀번호가 서로 다릅니다.';
-    } else {
-      return null; //null을 반환하면 정상
-    }
-  }
-
   userLogin() async {
     try {
-      var res = await http.post(Uri.parse(TravelApi.login), body: {
+      var res = await http.post(Uri.parse(HotelApi.login), body: {
         'travel_email': emailController.text.trim(),
         'travel_pw': passwordController.text.trim(),
       });
 
       if (res.statusCode == 200) {
+        print('200');
         var resLogin = jsonDecode(res.body);
 
         if (resLogin['success'] == true) {
-          TravelUser travelInfo = TravelUser.fromJson(resLogin['travelData']);
+          HotelUser travelInfo = HotelUser.fromJson(resLogin['hotelData']);
 
           setState(() {
             emailController.clear();
@@ -137,25 +126,25 @@ class LoginState extends State<Login> {
           child: Form(
               key: formKey,
               child: Container(
-                padding: const EdgeInsets.all(40.0),
+                padding: const EdgeInsets.only(top: 40.0),
                 child: Column(
                   children: [
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('여행사 로그인'),
+                        Text('관리자 로그인'),
                       ],
                     ),
                     const SizedBox(
-                        width: 120,
+                        width: 100,
                         child: Divider(color: Colors.black, thickness: 2.0)),
                     Padding(
                       padding: const EdgeInsets.only(top: 20.0),
                       child: SizedBox(
                         width: 350,
                         child: TextFormField(
-                          keyboardType: TextInputType.emailAddress,
                           onChanged: (value) => id = value,
+                          keyboardType: TextInputType.emailAddress,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return "이메일을 입력하세요.";
@@ -182,18 +171,15 @@ class LoginState extends State<Login> {
                         obscureText: true,
                         keyboardType: TextInputType.visiblePassword,
                         onChanged: (value) => pw = value,
-                        validator: (value) => validatePassword(value!),
+                        // validator: (value) => validatePassword(value!),
                         controller: passwordController,
                         decoration: const InputDecoration(
                             prefixIcon: Icon(Icons.lock),
                             hintText: '비밀번호를 입력하세요.'),
                       ),
                     ),
-                    const SizedBox(
-                      height: 30,
-                    ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
+                      padding: const EdgeInsets.only(top: 30.0, bottom: 30.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -203,7 +189,7 @@ class LoginState extends State<Login> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const confirm_travel()));
+                                          const confirm_hotel()));
                             },
                             child: const MouseRegion(
                               cursor: SystemMouseCursors.click,
@@ -233,7 +219,7 @@ class LoginState extends State<Login> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const travelSignUp()));
+                                          const HotelSignUp()));
                             },
                             child: const MouseRegion(
                               cursor: SystemMouseCursors.click,
@@ -263,7 +249,7 @@ class LoginState extends State<Login> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const travelSignUp()));
+                                          const HotelSignUp()));
                             },
                             child: const MouseRegion(
                               cursor: SystemMouseCursors.click,
@@ -282,9 +268,6 @@ class LoginState extends State<Login> {
                           ),
                         ],
                       ),
-                    ),
-                    const SizedBox(
-                      height: 30,
                     ),
                     SizedBox(
                       width: 350,

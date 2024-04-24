@@ -1,123 +1,283 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_hotel/login/both_login.dart';
-import 'package:flutter_application_hotel/login/both_signup.dart';
+import 'package:flutter_application_hotel/login/hotel_login.dart' as hotel;
+import 'package:flutter_application_hotel/login/travel_login.dart' as travel;
+import 'package:flutter_application_hotel/layout/confirm_hotel.dart';
+import 'package:flutter_application_hotel/layout/confirm_travel.dart';
+import 'package:flutter_application_hotel/login/admin_login.dart'
+    as managementer;
+import 'package:flutter_application_hotel/login/admin_signup.dart';
 
-class Index extends StatefulWidget {
-  const Index({super.key});
+class bothLogin extends StatelessWidget {
+  const bothLogin({super.key});
 
-  @override
-  State<Index> createState() => _IndexState();
-}
-
-class _IndexState extends State<Index> {
   @override
   Widget build(BuildContext context) {
+    String confirm = "";
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'AnyStay',
-          style: TextStyle(
-            fontFamily: 'CantoraOne',
-            fontSize: 24.0,
+          '로그인 또는 회원가입',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        shape: const Border(
+          bottom: BorderSide(
+            color: Colors.grey,
+            width: 1,
           ),
         ),
-        shape: const Border(
-            bottom: BorderSide(
-          color: Colors.grey,
-          width: 1,
-        )),
+        elevation: 0.0,
       ),
       body: Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 120,
-                height: 120,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const bothLogin()));
-                  },
-                  style: FilledButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.person,
-                        size: 50,
-                        color: Colors.white,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 6.0),
-                        child: Text(
-                          '로그인',
-                          style: TextStyle(color: Colors.white, fontSize: 16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 145,
+                  height: 130,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const hotel.Login()));
+                        confirm = "hotel";
+                        print(confirm);
+                      },
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
+                      ),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.hotel,
+                            size: 50,
+                            color: Colors.white,
+                          ),
+                          Text(
+                            '호텔 로그인',
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          ),
+                        ],
+                      )),
+                ),
+                const SizedBox(
+                  width: 50,
+                ),
+                SizedBox(
+                  width: 145,
+                  height: 130,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const travel.Login()));
+                        confirm = "travel";
+                        print(confirm);
+                      },
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.airplane_ticket,
+                            color: Colors.white,
+                            size: 50,
+                          ),
+                          Text(
+                            '여행사 로그인',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      )),
+                ),
+                const SizedBox(
+                  width: 50,
+                ),
+                SizedBox(
+                  width: 145,
+                  height: 130,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const managementer.Login()));
+                        confirm = "travel";
+                        print(confirm);
+                      },
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.manage_history,
+                            color: Colors.white,
+                            size: 50,
+                          ),
+                          Text(
+                            '관리자 로그인',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      )),
+                ),
+              ],
+            ),
+            const Padding(
+              padding: EdgeInsets.all(12.0),
+              child: SizedBox(
+                width: 530,
+                child: Divider(
+                  thickness: 2.0,
+                  color: Colors.black45,
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SizedBox(
+                        width: 145,
+                        height: 130,
+                        child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const confirm_hotel()));
+                              confirm = "hotel";
+                              print(confirm);
+                            },
+                            style: FilledButton.styleFrom(
+                              backgroundColor: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: const Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.hotel,
+                                  size: 50,
+                                  color: Colors.white,
+                                ),
+                                Text(
+                                  '호텔 회원가입',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 14),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            )),
+                      ),
+                      const SizedBox(
+                        width: 50,
+                      ),
+                      SizedBox(
+                        width: 145,
+                        height: 130,
+                        child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const confirm_travel()));
+                              confirm = "travel";
+                              print(confirm);
+                            },
+                            style: FilledButton.styleFrom(
+                              backgroundColor: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: const Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.airplane_ticket,
+                                  color: Colors.white,
+                                  size: 50,
+                                ),
+                                Text(
+                                  '여행사 회원가입',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            )),
+                      ),
+                      const SizedBox(
+                        width: 50,
+                      ),
+                      SizedBox(
+                        width: 145,
+                        height: 130,
+                        child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const adminSignUp()));
+                              confirm = "travel";
+                              print(confirm);
+                            },
+                            style: FilledButton.styleFrom(
+                              backgroundColor: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: const Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.manage_accounts,
+                                  color: Colors.white,
+                                  size: 50,
+                                ),
+                                Text(
+                                  '관리자 회원가입',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            )),
                       ),
                     ],
                   ),
                 ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(left: 25, right: 25),
-                child: SizedBox(
-                  width: 5,
-                  height: 120,
-                  child: VerticalDivider(
-                      color: Color.fromARGB(255, 211, 211, 211),
-                      thickness: 2.0),
-                ),
-              ),
-              SizedBox(
-                width: 120,
-                height: 120,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const bothSignUp()));
-                  },
-                  style: FilledButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.person_add,
-                        size: 50,
-                        color: Colors.white,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 6.0),
-                        child: Text(
-                          '회원가입',
-                          style: TextStyle(color: Colors.white, fontSize: 16),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      )),
+              ],
+            )
+          ],
+        ),
+      ),
     );
   }
 }

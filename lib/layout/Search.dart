@@ -1,8 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_hotel/api/hotel_name_api.dart';
-import 'package:flutter_application_hotel/model/hotel_query.dart';
+import 'hotel_select.dart';
 import 'package:http/http.dart' as http;
 
 class searchBar extends StatefulWidget {
@@ -14,33 +13,31 @@ class searchBar extends StatefulWidget {
 
 var queryController = TextEditingController();
 List<dynamic> hotelName = [];
+String status = '';
+bool? success;
 
 class _searchBarState extends State<searchBar> {
   Future<void> querySearch(String query) async {
     try {
       var response = await http
-          .get(Uri.parse('${HotelNameApi.hotelName}?=hotel_name=$query'));
-
-      print(queryController);
+          .get(Uri.parse('${HotelNameApi.hotelName}?hotel_name=$query'));
+      print('기달');
 
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonData = jsonDecode(response.body);
-        bool success = jsonData['success'];
+        success = jsonData['success'];
+        hotelName = jsonDecode(response.body)['hotel_list'];
+        print(hotelName);
 
-        if (success == true) {
-          print('성공');
+        if (success = true) {
           setState(() {
-            hotelName = jsonDecode(response.body)['hotel_names'];
+            hotelName = jsonDecode(response.body)['hotel_list'];
           });
-        } else {
-          throw Exception(const Text('오류발생'));
         }
       } else {
-        throw Exception(const Text('HTTP 요청 실패'));
+        print('실패');
       }
-    } catch (e) {
-      throw Exception(const Text('검색 실패'));
-    }
+    } catch (e) {}
   }
 
   @override
@@ -71,9 +68,43 @@ class _searchBarState extends State<searchBar> {
             child: ListView.builder(
           itemCount: hotelName.length,
           itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(hotelName[index]),
-            );
+            if (hotelName.isEmpty) {
+              return const Card(
+                child: ListTile(
+                  title: Text(
+                    "검색된 결과가 존재하지 않습니다.",
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              );
+            } else if (success == true) {
+              return Card(
+                child: ListTile(
+                  trailing: const Icon(Icons.arrow_right),
+                  title: Text(
+                    hotelName[index]['hotel_name'],
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(
+                        fontFamily: 'Pretendard', fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    hotelName[index]['hotel_address'],
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(
+                        fontFamily: 'Pretendard', fontWeight: FontWeight.w600),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: ((context) => HotelSelect(
+                                  hotelList: hotelName[index],
+                                ))));
+                  },
+                ),
+              );
+            }
+            return null;
           },
         ))
       ],
