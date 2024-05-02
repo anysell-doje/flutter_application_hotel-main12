@@ -116,8 +116,8 @@ class _MainViewState extends State<travel_index> {
               });
             },
             toggler: SideBarToggler(
-                expandIcon: Icons.keyboard_arrow_left,
-                shrinkIcon: Icons.keyboard_arrow_right,
+                expandIcon: Icons.keyboard_arrow_right,
+                shrinkIcon: Icons.keyboard_arrow_left,
                 onToggle: () {}),
           ),
         ),
