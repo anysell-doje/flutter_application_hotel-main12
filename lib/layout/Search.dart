@@ -47,8 +47,9 @@ class _searchBarState extends State<searchBar> {
         const SizedBox(
           height: 30,
         ),
-        SizedBox(
-          width: 600,
+        Container(
+          padding: const EdgeInsets.all(12),
+          width: double.infinity,
           child: TextFormField(
             controller: queryController,
             decoration: InputDecoration(

@@ -1,32 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_hotel/index/index.dart';
+import 'package:flutter_application_hotel/layout/travel_myPage.dart';
 import 'package:flutter_application_hotel/layout/Search.dart';
 import 'package:side_navigation/side_navigation.dart';
 import 'Search.dart';
 
 class travel_index extends StatefulWidget {
-  const travel_index({
-    super.key,
-  });
+  final String name;
+  final String email;
+  final String tel;
+  final String pw;
+  const travel_index(
+      {required this.email,
+      required this.name,
+      required this.tel,
+      required this.pw,
+      super.key});
 
   @override
-  createState() => _MainViewState();
+  createState() => _MainViewState(email, name, tel, pw);
 }
 
 class _MainViewState extends State<travel_index> {
-  List<Widget> views = [
-    const Center(),
-    const searchBar(),
-    const Center(
-      child: Text('chatting'),
-    ),
-    const Center(
-      child: Text('graph'),
-    ),
-    const Center(
-      child: Text('myPage'),
-    )
-  ];
+  String name;
+  String email;
+  String tel;
+  String pw;
+  late List<Widget> views;
+
+  _MainViewState(this.email, this.name, this.tel, this.pw);
+
+  @override
+  void initState() {
+    views = [
+      const Center(),
+      const searchBar(),
+      const Center(
+        child: Text('chatting'),
+      ),
+      const Center(
+        child: Text('통계'),
+      ),
+      travel_MyPage(email: email, name: name, tel: tel, pw: pw)
+    ];
+  }
+
   int selectedIndex = 0;
 
   @override
@@ -44,76 +61,70 @@ class _MainViewState extends State<travel_index> {
             fontFamily: 'CantoraOne',
           ),
         ),
-        actions: [
-          Padding(
-              padding: const EdgeInsets.only(right: 12),
-              child: IconButton(
-                  onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const bothLogin()),
-                        (route) => false);
-                  },
-                  icon: const Icon(Icons.logout)))
-        ],
         shape:
             Border(bottom: BorderSide(width: 3, color: Colors.grey.shade200)),
       ),
-      body: Row(
-        children: [
-          Container(
-            color: Colors.grey[200],
-            child: SideNavigationBar(
-              selectedIndex: selectedIndex,
-              items: const [
-                SideNavigationBarItem(
-                  icon: Icons.dashboard,
-                  label: '메인화면',
-                ),
-                SideNavigationBarItem(
-                  icon: Icons.search_outlined,
-                  label: '호텔검색',
-                ),
-                SideNavigationBarItem(
-                  icon: Icons.chat,
-                  label: '채팅',
-                ),
-                SideNavigationBarItem(
-                  icon: Icons.auto_graph_outlined,
-                  label: '통계',
-                ),
-                SideNavigationBarItem(
-                  icon: Icons.person,
-                  label: '마이페이지',
-                ),
-              ],
-              theme: SideNavigationBarTheme(
-                itemTheme: SideNavigationBarItemTheme(
-                    unselectedItemColor: Colors.black,
-                    selectedItemColor: Colors.black26,
-                    iconSize: 32.5,
-                    labelTextStyle:
-                        const TextStyle(fontSize: 15, color: Colors.black)),
-                togglerTheme: SideNavigationBarTogglerTheme.standard(),
-                dividerTheme: SideNavigationBarDividerTheme.standard(),
+      body: Sidebar(),
+    );
+  }
+
+  Row Sidebar() {
+    return Row(
+      children: [
+        Container(
+          color: Colors.grey[200],
+          child: SideNavigationBar(
+            selectedIndex: selectedIndex,
+            items: const [
+              SideNavigationBarItem(
+                icon: Icons.dashboard,
+                label: '메인화면',
               ),
-              onTap: (index) {
-                setState(() {
-                  selectedIndex = index;
-                });
-              },
-              toggler: SideBarToggler(
-                  expandIcon: Icons.menu,
-                  shrinkIcon: Icons.menu,
-                  onToggle: () {}),
+              SideNavigationBarItem(
+                icon: Icons.search_outlined,
+                label: '호텔검색',
+              ),
+              SideNavigationBarItem(
+                icon: Icons.chat,
+                label: '채팅',
+              ),
+              SideNavigationBarItem(
+                icon: Icons.auto_graph_outlined,
+                label: '통계',
+              ),
+              SideNavigationBarItem(
+                icon: Icons.person,
+                label: '마이페이지',
+              ),
+            ],
+            theme: SideNavigationBarTheme(
+              itemTheme: SideNavigationBarItemTheme(
+                  unselectedItemColor: Colors.black,
+                  selectedItemColor: Colors.black26,
+                  iconSize: 32.5,
+                  labelTextStyle:
+                      const TextStyle(fontSize: 15, color: Colors.black)),
+              togglerTheme: SideNavigationBarTogglerTheme.standard(),
+              dividerTheme: SideNavigationBarDividerTheme.standard(),
             ),
+            onTap: (index) {
+              setState(() {
+                if (index >= 0 && index < views.length) {
+                  // views의 길이에 맞게 범위를 확인합니다.
+                  selectedIndex = index;
+                }
+              });
+            },
+            toggler: SideBarToggler(
+                expandIcon: Icons.keyboard_arrow_left,
+                shrinkIcon: Icons.keyboard_arrow_right,
+                onToggle: () {}),
           ),
-          Expanded(
-            child: views.elementAt(selectedIndex),
-          )
-        ],
-      ),
+        ),
+        Expanded(
+          child: views.elementAt(selectedIndex),
+        )
+      ],
     );
   }
 }

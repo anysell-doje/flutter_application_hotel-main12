@@ -5,4 +5,5 @@ class TravelApi {
   static const validateEmail = "$hostConnect/travel/validate_email.jsp";
 
   static const login = "$hostConnect/travel/login.jsp";
+  static const userUpdate = "$hostConnect/travel/travel_update.jsp";
 }

@@ -41,17 +41,16 @@ class LoginState extends State<Login> {
   userLogin() async {
     try {
       var res = await http.post(Uri.parse(HotelApi.login), body: {
-        'travel_email': emailController.text.trim(),
-        'travel_pw': passwordController.text.trim(),
+        'user_email': emailController.text.trim(),
+        'user_pw': passwordController.text.trim(),
       });
 
       if (res.statusCode == 200) {
-        print('200');
+        print(res.statusCode);
         var resLogin = jsonDecode(res.body);
-
+        print(resLogin);
         if (resLogin['success'] == true) {
-          HotelUser travelInfo = HotelUser.fromJson(resLogin['hotelData']);
-
+          print(res);
           setState(() {
             emailController.clear();
             passwordController.clear();
@@ -68,8 +67,8 @@ class LoginState extends State<Login> {
   }
 
   complete() {
-    return Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const travel_index()));
+    // return Navigator.pushReplacement(
+    //     context, MaterialPageRoute(builder: (context) => const travel_index()));
   }
 
   failed() {

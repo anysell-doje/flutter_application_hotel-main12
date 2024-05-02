@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_hotel/api/travel_api.dart';
 import 'package:flutter_application_hotel/layout/travel_index.dart';
-import 'package:flutter_application_hotel/model/travel_user.dart';
+
 import 'travel_signup.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_application_hotel/layout/confirm_travel.dart';
@@ -22,6 +22,9 @@ class LoginState extends State<Login> {
   String id = "";
   String pw = "";
   bool? yes;
+  var name;
+  var email;
+  var tel;
   final formKey = GlobalKey<FormState>();
 
   String? validatePassword(String value) {
@@ -61,11 +64,13 @@ class LoginState extends State<Login> {
         var resLogin = jsonDecode(res.body);
 
         if (resLogin['success'] == true) {
-          TravelUser travelInfo = TravelUser.fromJson(resLogin['travelData']);
-
           setState(() {
+            pw = passwordController.text.trim();
             emailController.clear();
             passwordController.clear();
+            email = resLogin['travelData']['travel_email'];
+            name = resLogin['travelData']['travel_name'];
+            tel = resLogin['travelData']['travel_tel'];
           });
 
           complete();
@@ -80,7 +85,14 @@ class LoginState extends State<Login> {
 
   complete() {
     return Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const travel_index()));
+        context,
+        MaterialPageRoute(
+            builder: (context) => travel_index(
+                  email: email,
+                  name: name,
+                  tel: tel,
+                  pw: pw,
+                )));
   }
 
   failed() {
