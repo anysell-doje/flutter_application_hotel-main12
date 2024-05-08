@@ -63,7 +63,7 @@ class LoginState extends State<Login> {
       if (res.statusCode == 200) {
         var resLogin = jsonDecode(res.body);
 
-        if (resLogin['success'] == true) {
+        if (resLogin['success'] == true && passwordController.text.isNotEmpty) {
           setState(() {
             pw = passwordController.text.trim();
             emailController.clear();

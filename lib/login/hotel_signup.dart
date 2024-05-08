@@ -248,6 +248,7 @@ class _SignState extends State<HotelSignUp> {
                       child: ElevatedButton(
                         onPressed: () {
                           saveInfo();
+                          Navigator.popUntil(context, (route) => route.isFirst);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blueAccent,

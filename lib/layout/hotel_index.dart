@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_hotel/layout/hotel_MyPage.dart';
 import 'package:flutter_application_hotel/layout/travel_myPage.dart';
 import 'package:flutter_application_hotel/layout/Search.dart';
 import 'package:side_navigation/side_navigation.dart';
 import 'Search.dart';
 
-class travel_index extends StatefulWidget {
+class hotel_index extends StatefulWidget {
   final String name;
   final String email;
   final String tel;
   final String pw;
-  const travel_index(
+  const hotel_index(
       {required this.email,
       required this.name,
       required this.tel,
@@ -20,7 +21,7 @@ class travel_index extends StatefulWidget {
   createState() => _MainViewState(email, name, tel, pw);
 }
 
-class _MainViewState extends State<travel_index> {
+class _MainViewState extends State<hotel_index> {
   String name;
   String email;
   String tel;
@@ -40,7 +41,7 @@ class _MainViewState extends State<travel_index> {
       const Center(
         child: Text('통계'),
       ),
-      travel_MyPage(email: email, name: name, tel: tel, pw: pw)
+      hotel_MyPage(email: email, name: name, tel: tel, pw: pw)
     ];
   }
 

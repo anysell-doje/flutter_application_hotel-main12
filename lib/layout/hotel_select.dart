@@ -23,6 +23,8 @@ class _HotelSignUpState extends State<HotelSelect> {
   var nightCountController = TextEditingController();
   var hotelPriceController = TextEditingController();
   var roomCountController = TextEditingController();
+  var startDateController = TextEditingController(); // 시작 날짜 컨트롤러
+  var endDateController = TextEditingController(); // 종료 날짜 컨트롤러
   bool resvConfirm = false;
   @override
   void initState() {
@@ -260,52 +262,87 @@ class _HotelSignUpState extends State<HotelSelect> {
 
   List<Widget> buildFormFields() {
     return [
+      buildTextField('Name', userNameController, 'Please enter a name',
+          TextInputType.name),
+      buildTextField('Phone Number', userPhoneController,
+          'Please enter a phone number', TextInputType.phone),
+      buildTextField('Number of Guests', guestCountController,
+          'Please enter number of guests', TextInputType.number),
+      buildTextField('Number of Rooms', roomCountController,
+          'Please enter number of rooms', TextInputType.number),
       buildTextField(
-          '이름', userNameController, '이름을 입력하세요.', TextInputType.name),
-      buildTextField(
-          '전화번호', userPhoneController, '전화번호를 입력하세요.', TextInputType.phone),
-      buildTextField(
-          '인원수', guestCountController, '인원수를 입력하세요.', TextInputType.number),
-      buildTextField(
-          '객실수', roomCountController, '객실수를 입력하세요.', TextInputType.number),
-      buildTextField(
-          '박 수', nightCountController, '박 수를 입력하세요.', TextInputType.number),
-      buildTextField('총가격', hotelPriceController, '', TextInputType.number,
+          'Total Price', hotelPriceController, '', TextInputType.number,
           isReadOnly: true),
+      buildDateRangeField(
+          'Select Date Range', startDateController, endDateController),
     ];
   }
 
   Widget buildTextField(String label, TextEditingController controller,
       String errorMessage, TextInputType keyboardType,
       {bool isReadOnly = false}) {
-    return SizedBox(
-      width: 300,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-            child: Text(label,
-                style: const TextStyle(
-                    fontFamily: 'Pretendard',
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600)),
-          ),
-          TextFormField(
-            keyboardType: keyboardType,
-            controller: controller,
-            readOnly: isReadOnly,
-            validator: (String? value) {
-              if (!isReadOnly && (value == null || value.isEmpty)) {
-                return errorMessage;
-              }
-              return null;
-            },
-            decoration: const InputDecoration(
-                isDense: true,
-                contentPadding: EdgeInsets.only(top: 5, bottom: 10)),
-          ),
-        ],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          border: const OutlineInputBorder(),
+        ),
+        keyboardType: keyboardType,
+        readOnly: isReadOnly,
+        validator: (value) {
+          if (!isReadOnly && (value == null || value.isEmpty)) {
+            return errorMessage;
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget buildDateRangeField(
+      String label,
+      TextEditingController startController,
+      TextEditingController endController) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextFormField(
+        controller: TextEditingController(
+            text: '${startController.text} - ${endController.text}'),
+        decoration: InputDecoration(
+          labelText: label,
+          border: const OutlineInputBorder(),
+          suffixIcon: const Icon(Icons.calendar_today),
+        ),
+        readOnly: true,
+        onTap: () async {
+          DateTimeRange? pickedRange = await showDateRangePicker(
+            context: context,
+            firstDate: DateTime(2020),
+            lastDate: DateTime(2030),
+            initialDateRange:
+                startController.text.isNotEmpty && endController.text.isNotEmpty
+                    ? DateTimeRange(
+                        start: DateTime.parse(startController.text),
+                        end: DateTime.parse(endController.text))
+                    : null,
+          );
+          if (pickedRange != null) {
+            setState(() {
+              startController.text =
+                  "${pickedRange.start.year}-${pickedRange.start.month.toString().padLeft(2, '0')}-${pickedRange.start.day.toString().padLeft(2, '0')}";
+              endController.text =
+                  "${pickedRange.end.year}-${pickedRange.end.month.toString().padLeft(2, '0')}-${pickedRange.end.day.toString().padLeft(2, '0')}";
+            });
+          }
+        },
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please select a date range';
+          }
+          return null;
+        },
       ),
     );
   }

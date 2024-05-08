@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_hotel/api/travel_api.dart';
+import 'package:flutter_application_hotel/index/index.dart';
 import 'package:flutter_application_hotel/model/travel_user.dart';
 import 'package:http/http.dart' as http;
 
@@ -265,6 +266,7 @@ class _SignState extends State<travelSignUp> {
                           saveInfo();
                           ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('가입성공')));
+                          Navigator.popUntil(context, (route) => route.isFirst);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blueAccent,

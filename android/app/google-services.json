@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "88909482704",
+    "project_id": "anystay-e2a14",
+    "storage_bucket": "anystay-e2a14.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:88909482704:android:7898750dcf45628cbb2cd5",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_hotel"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD41K9fBeY1osJvLsBv1PPGITFw2uryaRw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

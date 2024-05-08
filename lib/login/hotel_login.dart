@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_hotel/layout/confirm_hotel.dart';
+import 'package:flutter_application_hotel/layout/hotel_index.dart';
 import 'package:flutter_application_hotel/model/hotel_user.dart';
 import 'package:flutter_application_hotel/login/hotel_signup.dart';
 import 'package:http/http.dart' as http;
@@ -22,6 +23,9 @@ class LoginState extends State<Login> {
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  var name;
+  var email;
+  var tel;
   String? validatePassword(String value) {
     String pattern =
         r'^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,15}$';
@@ -49,11 +53,15 @@ class LoginState extends State<Login> {
         print(res.statusCode);
         var resLogin = jsonDecode(res.body);
         print(resLogin);
-        if (resLogin['success'] == true) {
+        if (resLogin['success'] == true && passwordController.text.isNotEmpty) {
           print(res);
           setState(() {
+            pw = passwordController.text.trim();
             emailController.clear();
             passwordController.clear();
+            email = resLogin['hotelData']['user_email'];
+            name = resLogin['hotelData']['user_name'];
+            tel = resLogin['hotelData']['user_tel'];
           });
 
           complete();
@@ -67,8 +75,15 @@ class LoginState extends State<Login> {
   }
 
   complete() {
-    // return Navigator.pushReplacement(
-    //     context, MaterialPageRoute(builder: (context) => const travel_index()));
+    return Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => hotel_index(
+                  email: email,
+                  name: name,
+                  tel: tel,
+                  pw: pw,
+                )));
   }
 
   failed() {

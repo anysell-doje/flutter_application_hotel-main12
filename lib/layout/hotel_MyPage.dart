@@ -2,18 +2,19 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_application_hotel/api/hotel_api.dart';
 import 'package:flutter_application_hotel/api/travel_api.dart';
 import 'package:flutter_application_hotel/model/travel_user.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_application_hotel/login/travel_login.dart' as travel;
 
-class travel_MyPage extends StatefulWidget {
+class hotel_MyPage extends StatefulWidget {
   final String name;
   final String email;
   final String tel;
   final String pw;
-  const travel_MyPage(
+  const hotel_MyPage(
       {required this.email,
       required this.name,
       required this.tel,
@@ -21,10 +22,10 @@ class travel_MyPage extends StatefulWidget {
       super.key});
 
   @override
-  State<travel_MyPage> createState() => _travel_MyPageState();
+  State<hotel_MyPage> createState() => _hotel_MyPageState();
 }
 
-class _travel_MyPageState extends State<travel_MyPage> {
+class _hotel_MyPageState extends State<hotel_MyPage> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   var nameController = TextEditingController(); // 정보변경전/후 나타내는 값
   var name2Controller = TextEditingController(); // 정보변경 입력값
@@ -46,20 +47,13 @@ class _travel_MyPageState extends State<travel_MyPage> {
     pwController.text = pw2Controller.text.trim();
   }
 
-  String? validatePassword(String value) {
-    if (value.isEmpty) {
-      return '비밀번호를 입력하세요';
-    }
-    return null;
-  }
-
   userUpdate() async {
     try {
-      var res = await http.post(Uri.parse(TravelApi.userUpdate), body: {
-        'travel_email': emailController.text.trim(),
-        'travel_name': name2Controller.text.trim(),
-        'travel_tel': tel2Controller.text.trim(),
-        'travel_pw': pwController.text.trim()
+      var res = await http.post(Uri.parse(HotelApi.userUpdate), body: {
+        'user_email': emailController.text.trim(),
+        'user_name': name2Controller.text.trim(),
+        'user_tel': tel2Controller.text.trim(),
+        'user_pw': pwController.text.trim()
       });
 
       if (res.statusCode == 200) {
@@ -93,9 +87,9 @@ class _travel_MyPageState extends State<travel_MyPage> {
 
   userPwUpdate() async {
     try {
-      var resPw = await http.post(Uri.parse(TravelApi.userPwUpdate), body: {
-        'travel_email': emailController.text.trim(),
-        'travel_pw': pw2Controller.text.trim(),
+      var resPw = await http.post(Uri.parse(HotelApi.userPwUpdate), body: {
+        'user_email': emailController.text.trim(),
+        'user_pw': pw2Controller.text.trim(),
       });
 
       if (resPw.statusCode == 200) {
@@ -408,7 +402,7 @@ class _travel_MyPageState extends State<travel_MyPage> {
                                                   validator: (value) {
                                                     if (value == null ||
                                                         value.isEmpty) {
-                                                      return "입력해주세요";
+                                                      return "비밀번호를 입력하세요.";
                                                     }
                                                     return null;
                                                   },
